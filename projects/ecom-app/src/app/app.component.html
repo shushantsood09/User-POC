@@ -1,0 +1,27 @@
+<div class="landing-container">
+  <!-- Top Navigation Row -->
+  <div class="top-bar" *ngIf="!isLoginPage">
+    <button
+      pButton
+      type="button"
+      label="Go Home"
+      icon="pi pi-home"
+      (click)="goHome()"
+      class="p-button-text"
+    ></button>
+
+    <button
+      pButton
+      type="button"
+      icon="pi pi-sign-out"
+      class="p-button-rounded p-button-danger p-button-outlined logout-button"
+      (click)="logout()"
+      title="Logout"
+    ></button>
+  </div>
+
+  <!-- Routed Component -->
+  <div style="margin-top: 10px;">
+    <router-outlet></router-outlet>
+  </div>
+</div>

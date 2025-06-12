@@ -1,0 +1,23 @@
+<p-card header="{{ isEditMode ? 'Edit Role' : 'Add New Role' }}" styleClass="mt-4">
+  <form [formGroup]="roleForm" (ngSubmit)="onSubmit()">
+    <div class="p-fluid">
+      <div class="field">
+        <label for="roleId">Role ID</label>
+        <input id="roleId" type="number" pInputText formControlName="roleId" />
+        <small *ngIf="roleForm.get('roleId')?.invalid && roleForm.get('roleId')?.touched" class="p-error">
+          Role ID is required
+        </small>
+      </div>
+
+      <div class="field">
+        <label for="role">Role</label>
+        <input id="role" type="text" pInputText formControlName="role" />
+        <small *ngIf="roleForm.get('role')?.invalid && roleForm.get('role')?.touched" class="p-error">
+          Role is required
+        </small>
+      </div>
+
+      <button type="submit" pButton label="Save" [disabled]="roleForm.invalid" class="mt-2"></button>
+    </div>
+  </form>
+</p-card>

@@ -1,0 +1,87 @@
+<p-card>
+  <h2>Roles List</h2>
+
+  <p-table
+    #dt
+    [value]="roles"
+    [paginator]="true"
+    [rows]="5"
+    [globalFilterFields]="['roleId', 'role']"
+    [responsiveLayout]="'scroll'"
+    [resizableColumns]="true"
+    sortMode="multiple"
+  >
+    <!-- Table Caption -->
+    <ng-template pTemplate="caption">
+      <div
+        class="p-d-flex p-ai-center p-jc-between"
+        style="gap: 1rem; flex-wrap: wrap"
+      >
+        <input
+          type="text"
+          pInputText
+          placeholder="Search roles..."
+          (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          style="flex: 1"
+        />
+        <button
+          pButton
+          *ngIf="authService.getRole() === 'Admin'"
+          type="button"
+          icon="pi pi-user-plus"
+          class="p-button-rounded p-button-success"
+          (click)="addRole()"
+          label="Add Role"
+        ></button>
+      </div>
+    </ng-template>
+
+    <!-- Table Header -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="roleId">
+          Role ID
+          <p-sortIcon field="roleId"></p-sortIcon>
+        </th>
+        <th pSortableColumn="role">
+          Role
+          <p-sortIcon field="role"></p-sortIcon>
+        </th>
+        <th *ngIf="authService.getRole() === 'Admin'">Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Table Body -->
+    <ng-template pTemplate="body" let-role>
+      <tr>
+        <td>{{ role.roleId }}</td>
+        <td>{{ role.role }}</td>
+        <td *ngIf="authService.getRole() === 'Admin'">
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-info p-button-sm mr-2"
+            *ngIf="authService.getRole() === 'Admin'"
+            (click)="goToDetails(role.id)"
+            title="Edit"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            class="p-button-rounded p-button-danger p-button-sm"
+            *ngIf="authService.getRole() === 'Admin'"
+            (click)="deleteRole(role.id)"
+            title="Delete"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty Message -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="3" class="text-center">No roles found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

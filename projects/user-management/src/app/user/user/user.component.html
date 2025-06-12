@@ -1,0 +1,115 @@
+<div class="p-card p-mt-3 p-p-4">
+  <h2 class="p-mb-3">User List</h2>
+
+  <p-table
+    #dt
+    [value]="users"
+    [paginator]="true"
+    [rows]="5"
+    [rowsPerPageOptions]="[1, 5, 10, 20, 50]"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} users"
+    [globalFilterFields]="['name', 'email', 'role']"
+    [responsiveLayout]="'scroll'"
+    [resizableColumns]="true"
+    sortMode="multiple"
+  >
+    <!-- Header with AutoComplete-->
+    <ng-template pTemplate="caption">
+      <div class="p-d-flex p-ai-center p-jc-between p-flex-wrap p-gap-3">
+        <p-autoComplete
+          [(ngModel)]="searchQuery"
+          [suggestions]="filteredSuggestions"
+          (completeMethod)="filterUsers($event)"
+          (onSelect)="applyGlobalFilter()"
+          placeholder="Search users..."
+          field="label"
+          [minLength]="1"
+        ></p-autoComplete>
+
+        <button
+          pButton
+          type="button"
+          icon="pi pi-user-plus"
+          class="p-button-rounded p-button-success"
+          (click)="addUser()"
+          *ngIf="authService.getRole() === 'Admin'"
+          label="Add User"
+        ></button>
+      </div>
+    </ng-template>
+
+    <!-- Table Header -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="name">
+          Name <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="email">
+          User Name <p-sortIcon field="userName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="email">
+          Email <p-sortIcon field="email"></p-sortIcon>
+        </th>
+        <th pSortableColumn="role">
+          Role <p-sortIcon field="role"></p-sortIcon>
+        </th>
+        <th *ngIf="authService.getRole() === 'Admin'">Actions</th>
+      </tr>
+    </ng-template>
+
+    <!-- Table Body -->
+    <ng-template pTemplate="body" let-user>
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.userName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.role }}</td>
+        <td *ngIf="authService.getRole() === 'Admin'">
+          <button
+            pButton
+            icon="pi pi-pencil"
+            class="p-button-rounded p-button-info p-button-sm p-mr-2"
+            (click)="goToDetails(user.id)"
+            *ngIf="authService.getRole() === 'Admin'"
+            title="Edit"
+          ></button>
+          <button
+            pButton
+            icon="pi pi-trash"
+            style="margin-left: 10px;"
+            class="p-button-rounded p-button-danger p-button-sm"
+            (click)="deleteUser(user.id)"
+            *ngIf="authService.getRole() === 'Admin'"
+            title="Delete"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Empty Message -->
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="4" class="p-text-center">No users found.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <p-confirmDialog></p-confirmDialog>
+</div>
+
+<p-dialog
+  header="{{ isEditMode ? 'Edit User' : 'Add User' }}"
+  [(visible)]="displayDialog"
+  [modal]="true"
+  [style]="{ width: '500px' }"
+  [closable]="true"
+  (onHide)="onDialogClose()"
+>
+  <ng-container *ngIf="displayDialog">
+    <app-user-detail
+      [userId]="selectedUserId"
+      (closeDialog)="onDialogHide()"
+    ></app-user-detail>
+  </ng-container>
+</p-dialog>

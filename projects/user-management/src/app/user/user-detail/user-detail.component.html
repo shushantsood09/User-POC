@@ -1,0 +1,143 @@
+<!-- Toolbar Replacement -->
+<!-- <div
+  class="p-toolbar p-mb-4 p-p-3 p-shadow-2"
+  style="background-color: var(--primary-color); color: white"
+>
+  <div class="p-toolbar-group-left">
+    <h3 class="p-m-0">{{ isEditMode ? "Edit User" : "Add New User" }}</h3>
+  </div>
+</div> -->
+
+<!-- Form Card -->
+<div class="p-card p-p-4 p-mt-4 p-shadow-2" style="max-width: 600px">
+  <form
+    #userForm="ngForm"
+    (ngSubmit)="triggerValidation(userForm)"
+    class="p-fluid p-formgrid p-grid"
+  >
+    <!-- Name Field -->
+    <div class="p-field p-col-12">
+      <label for="name">Name<span style="color: red">*</span></label>
+      <input
+        id="name"
+        type="text"
+        pInputText
+        name="name"
+        [(ngModel)]="user.name"
+        required
+        #name="ngModel"
+      />
+      <small *ngIf="name.invalid && name.touched" class="p-error"
+        >Name is required.</small
+      >
+    </div>
+
+    <!-- Email Field -->
+    <div class="p-field p-col-12">
+      <label for="email">Email<span style="color: red">*</span></label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        name="email"
+        [(ngModel)]="user.email"
+        [required]="true"
+        email
+        #email="ngModel"
+      />
+      <small *ngIf="email.errors?.['required'] && email.touched" class="p-error"
+        >Email is required.</small
+      >
+      <small *ngIf="email.errors?.['email'] && email.touched" class="p-error"
+        >Invalid email format.</small
+      >
+    </div>
+
+    <!-- Role Dropdown -->
+    <div class="p-field p-col-12">
+      <label for="role">Role<span style="color: red">*</span></label>
+      <p-dropdown
+        inputId="role"
+        [options]="roles"
+        name="role"
+        [(ngModel)]="user.role"
+        optionLabel="label"
+        optionValue="value"
+        [required]="true"
+        #role="ngModel"
+        placeholder="Select Role"
+      ></p-dropdown>
+      <small *ngIf="role.invalid && role.touched" class="p-error"
+        >Role is required.</small
+      >
+    </div>
+
+    <!-- Phone Field -->
+    <div class="p-field p-col-12">
+      <label for="phone">Phone<span style="color: red">*</span></label>
+      <p-inputMask
+        id="phone"
+        mask="99999-99999"
+        name="phone"
+        [(ngModel)]="user.phone"
+        [required]="true"
+        #phone="ngModel"
+        placeholder="e.g. 98765-43210"
+      ></p-inputMask>
+      <small *ngIf="phone.invalid && phone.touched" class="p-error">
+        Phone is required.
+      </small>
+    </div>
+
+    <!-- Location Field -->
+    <div class="p-field p-col-12">
+      <label for="location">Locations<span style="color: red">*</span></label>
+      <p-multiSelect
+        inputId="location"
+        [options]="locations"
+        optionLabel="label"
+        optionValue="value"
+        name="locations"
+        [(ngModel)]="user.locations"
+        #locationsCtrl="ngModel"
+        placeholder="Select Locations"
+      ></p-multiSelect>
+      <small
+        *ngIf="
+          locationsTouched && (!user.locations || user.locations.length === 0)
+        "
+        class="p-error"
+      >
+        At least one location is required.
+      </small>
+    </div>
+
+    <!-- Username Field -->
+    <div class="p-field p-col-12">
+      <label for="username">Username<span style="color: red">*</span></label>
+      <input
+        id="username"
+        type="text"
+        pInputText
+        name="username"
+        [(ngModel)]="user.userName"
+        pattern="^[a-zA-Z0-9]*$"
+        required
+        #username="ngModel"
+      />
+      <small *ngIf="username.invalid && username.touched" class="p-error">
+        Only alphanumeric characters allowed.
+      </small>
+    </div>
+
+    <!-- Save Button -->
+    <div class="p-col-12 p-d-flex p-jc-end" style="margin-top: 20px">
+      <button
+        pButton
+        label="Save"
+        class="p-button-primary"
+        type="submit"
+      ></button>
+    </div>
+  </form>
+</div>
